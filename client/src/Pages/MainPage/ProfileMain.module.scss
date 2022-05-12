@@ -1,0 +1,40 @@
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+.wrapper {
+    display: flex;
+    align-items: left;
+    flex-flow: column wrap;
+    margin: 3% 5% 0 4%;
+}
+.profile_main_title {
+    font-weight: 800;
+    font-size: 6vh;
+}
+.profile_frontend_blog_title {
+    font-weight: 500;
+    font-size: 3vh;
+    color: #aaaaaa;
+}
+.profile_main_image {
+    width: 20vw;
+    height: 45vh;
+    border-radius: 1vh;
+}
+.profile_about_title {
+    font-weight: 700;
+}
+.profile_about_me {
+    font-weight: 500;
+    font-size: 2vh;
+}
+.social_media_wrapper {
+    display: flex;
+    align-items: center;
+}
+.github_logo {
+    padding-left: 0.4vw;
+    padding-top: 2.5vh;
+}

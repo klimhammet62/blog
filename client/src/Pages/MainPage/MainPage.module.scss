@@ -1,0 +1,14 @@
+.wrapper {
+    display: flex;
+    justify-content: space-between;
+}
+.news_main_wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-right: 15vw;
+}
+.toggle_menu_wrapper {
+    position: absolute;
+    right: 0;
+}

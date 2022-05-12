@@ -1,0 +1,77 @@
+.toggle_menu_wrapper_unactive {
+    display: flex;
+    cursor: pointer;
+    justify-content: center;
+    flex-direction: column;
+    align-items: center;
+    height: 100vh;
+    width: 5vw;
+    background-color: #13315e;
+    transition: all 1s;
+}
+.toggle_menu_wrapper_active {
+    display: flex;
+    cursor: pointer;
+    height: 100vh;
+    background-color: #13315e;
+    cursor: pointer;
+    width: 16vw;
+    transition: all 1s;
+}
+
+.toggle_menu_text {
+    transform: rotate(-90deg);
+    margin: 44vh 0 10vh 0;
+    font-size: 5vh;
+    color: white;
+}
+$animation-delay: 0.1s;
+$arrow-size: 3vh;
+
+.scroll_arrow {
+    width: $arrow-size;
+    height: $arrow-size;
+    margin:25vh 0 1vh 2vh;
+    transform: rotate(135deg);
+    border-right: 0.35vh solid white;
+    border-bottom: 0.35vh solid white;
+    animation: arrow_wave 2.5s infinite;
+    animation-direction: alternate;
+    transition: all 1s;
+}
+.scroll_arrow_reverse {
+    position: fixed;
+    width: $arrow-size;
+    height: $arrow-size;
+    margin: 50vh 0 1vh 16vh;
+    transform: rotate(315deg);
+    border-right: 0.35vh solid white;
+    border-bottom: 0.35vh solid white;
+    animation: arrow_wave 2.5s infinite;
+    animation-direction: alternate;
+    transition: all 1s;
+}
+
+@keyframes arrow_wave {
+    0% {
+        opacity: 0;
+    }
+    15% {
+        opacity: 0.15;
+    }
+    35% {
+        opacity: 0.35;
+    }
+    50% {
+        opacity: 0.5;
+    }
+    65% {
+        opacity: 0.65;
+    }
+    80% {
+        opacity: 0.8;
+    }
+    100% {
+        opacity: 1;
+    }
+}

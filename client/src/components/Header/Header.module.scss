@@ -1,0 +1,42 @@
+.header {
+}
+.input_disabled {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 7vh;
+}
+.input_enabled {
+    display: flex;
+    align-items: center;
+    margin-top: 10.1vh;
+    width:36vw;
+}
+.header_input {
+    position: absolute;
+    width: 36vw;
+    padding: 3vh;
+    border: none;
+    background-color: #f9fafd;
+}
+.header_input:focus {
+    outline: none;
+    border-bottom: 2px solid #1e5ab5;
+}
+.mark_button {
+    position: relative;
+    margin-left: 34vw;
+    color: grey;
+}
+.mark_button:hover {
+    cursor: pointer;
+    color: #084a94;
+}
+.loupe {
+    cursor: pointer;
+    margin-right: 2vw;
+    color: #DEDEDE;
+}
+.loupe:hover {
+    color: #084a94;
+}

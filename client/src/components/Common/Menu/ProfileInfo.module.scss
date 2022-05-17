@@ -1,6 +1,37 @@
 .menu_wrapper {
+    cursor: pointer;
+    width: 100%;
     color: white;
-    position: fixed;
+}
+.profile_info_wrapper {
+}
+.menu_nav {
+    display: flex;
+    justify-content: center;
+    align-items: stretch;
+    margin-top: 10vh;
+    font-weight: 700;
+    font-size: 3vh;
+}
+li {
+    overflow: hidden;
+    padding: 2.5vh;
+    width: 16vw;
+}
+li:hover {
+    overflow: hidden;
+    padding: 2.5vh;
+    width: 16vw;
+    background-color: rgba(255, 255, 255, 0.384);
+}
+.link {
+    color: white;
+    list-style: none;
+    text-decoration: none;
+}
+
+.link:hover {
+    color: black;
 }
 .full_name {
 }

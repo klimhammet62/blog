@@ -1,19 +1,19 @@
-import React, { FC, useState, useEffect } from "react";
-import { Avatar } from "./Avatar";
+import { FC, useState, useEffect } from "react";
+import { Avatar } from "../Avatar/Avatar";
 import { Profile } from "./Profile";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMagnifyingGlass, faXmark } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from "react-router-dom";
 import styles from "./Header.module.scss";
 
-export const Header: FC = () => {
+export const Header: FC = (): JSX.Element => {
     const [toggleInput, setToggleInput] = useState<boolean>(true);
     const [modal, setModal] = useState<boolean>(false);
     const navigate = useNavigate();
 
     const signOut = () => {
         localStorage.removeItem("token");
-        navigate("/signin");
+        navigate("/login");
     };
     useEffect(() => {}, [modal]);
 

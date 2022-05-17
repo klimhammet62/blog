@@ -1,15 +1,11 @@
-import React, { Dispatch, useState, FC, useEffect, SetStateAction } from "react";
+import { FC } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser } from "@fortawesome/free-solid-svg-icons";
 import { Modal } from "../Modal/Modal";
+import { TModal } from "../../../types/React";
 import styles from "./Profile.module.scss";
 
-export type ModalType = {
-    modal: boolean;
-    setModal: Dispatch<SetStateAction<boolean>>;
-}
-
-export const Profile: FC<ModalType> = ({ modal, setModal }): JSX.Element => {
+export const Profile: FC<TModal> = ({ modal, setModal }): JSX.Element => {
     return (
         <div className={styles.profile_content_wrapper}>
             <FontAwesomeIcon

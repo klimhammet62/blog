@@ -4,7 +4,7 @@ import { faXmark } from "@fortawesome/free-solid-svg-icons";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { Button, TextField, Grid, Paper } from "@material-ui/core";
-import { Avatar } from "../Header/Avatar";
+import { Avatar } from "../Avatar/Avatar";
 import { useMutation } from "react-query";
 import { $api } from "../../../store/api/api";
 import { Link, useNavigate } from "react-router-dom";

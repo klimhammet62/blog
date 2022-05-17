@@ -3,7 +3,7 @@ import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { Button, TextField, Grid, Paper } from "@material-ui/core";
 import { useMutation } from "react-query";
-import { Avatar } from "../../components/Common/Header/Avatar";
+import { Avatar } from "../../components/Common/Avatar/Avatar";
 import { Link, useNavigate } from "react-router-dom";
 import { $api } from "../../store/api/api";
 import { toast } from 'react-toastify';

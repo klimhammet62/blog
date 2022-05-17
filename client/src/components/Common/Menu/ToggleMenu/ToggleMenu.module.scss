@@ -15,9 +15,9 @@
     cursor: pointer;
     height: 100vh;
     background-color: #13315e;
-    cursor: pointer;
     width: 16vw;
     transition: all 1s;
+    overflow: hidden;
 }
 
 .toggle_menu_text {
@@ -44,7 +44,7 @@ $arrow-size: 3vh;
     position: fixed;
     width: $arrow-size;
     height: $arrow-size;
-    margin: 50vh 0 1vh 16vh;
+    margin: 90vh 0 1vh 14vh;
     transform: rotate(315deg);
     border-right: 0.35vh solid white;
     border-bottom: 0.35vh solid white;

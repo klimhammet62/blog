@@ -1,14 +1,12 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { useAppSelector } from "../../store/dispatchHook";
 import styles from "./ProfileInfo.module.scss";
 
 export const ProfileInfo = () => {
-    const { fullName } = useAppSelector((state) => state.register);
     return (
         <div className={styles.menu_wrapper}>
             <div className={styles.profile_info_wrapper}>
-                <h1 className={styles.full_name}>{fullName}</h1>
+                <h1 className={styles.full_name}>Vasya</h1>
                 <h3 className={styles.registration_date}>
                     Дата регистрации: 12 декабря 2014 в 12:45
                 </h3>

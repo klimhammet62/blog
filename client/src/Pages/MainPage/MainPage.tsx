@@ -1,10 +1,10 @@
 import { FC } from "react";
 import { NewsMain } from "./News/NewsMain";
 import { ProfileMain } from "./ProfileMain";
-import { Navigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { Header } from "../../components/Common/Header/Header";
+import { ToggleMenu } from "../../components/Common/Menu/ToggleMenu/ToggleMenu";
 import styles from "./MainPage.module.scss";
-import { Header } from "../../components/Header/Header";
-import { ToggleMenu } from "../../components/Menu/ToggleMenu/ToggleMenu";
 /* ЧЕРНОЕ БЕЛОЕ switch */
 export const MainPage: FC = () => {
     return (

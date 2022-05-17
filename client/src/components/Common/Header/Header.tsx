@@ -3,22 +3,17 @@ import { Avatar } from "./Avatar";
 import { Profile } from "./Profile";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMagnifyingGlass, faXmark } from "@fortawesome/free-solid-svg-icons";
-import styles from "./Header.module.scss";
 import { useNavigate } from "react-router-dom";
-import { useDispatch } from "react-redux";
-import { defaultState } from "../../store/slices/authSlice";
-import { useAppSelector } from "../../store/dispatchHook";
+import styles from "./Header.module.scss";
 
 export const Header: FC = () => {
     const [toggleInput, setToggleInput] = useState<boolean>(true);
     const [modal, setModal] = useState<boolean>(false);
     const navigate = useNavigate();
-    const dispatch = useDispatch();
 
-    const signout = () => {
+    const signOut = () => {
         localStorage.removeItem("token");
         navigate("/signin");
-        dispatch(defaultState());
     };
     useEffect(() => {}, [modal]);
 

@@ -1,5 +1,26 @@
-.link{
+.link {
     cursor: pointer;
     color: rgba(255, 255, 255, 0.922);
     text-decoration: none;
+}
+.wrapper {
+    display: flex;
+    flex-direction: column;
+    flex-flow: flow wrap;
+    margin: 1vmin 2vmin 2vmin 1vmin;
+    width: 5vmax;
+    flex-wrap: nowrap;
+    align-items: center;
+    font-size: 2vh;
+}
+.field {
+    font-size: 2vh;
+}
+.font_error {
+    color: red;
+    font-size: 2vh;
+}
+.font_edit {
+    font-size: 2vh;
+    font-weight: 500;
 }

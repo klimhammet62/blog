@@ -8,6 +8,7 @@
     width: 5vw;
     background-color: #13315e;
     transition: all 1s;
+    overflow: hidden;
 }
 .toggle_menu_wrapper_active {
     display: flex;

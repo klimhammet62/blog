@@ -1,0 +1,56 @@
+.link {
+    cursor: pointer;
+    color: rgba(255, 255, 255, 0.922);
+    text-decoration: none;
+}
+.wrapper {
+    display: flex;
+    flex-direction: column;
+    flex-flow: flow wrap;
+    margin: 1vmin 2vmin 2vmin 1vmin;
+    width: 5vmax;
+    flex-wrap: nowrap;
+    align-items: center;
+    font-size: 2vh;
+}
+.field {
+    font-size: 2vh;
+}
+.font_error {
+    color: red;
+    font-size: 2vh;
+}
+.font_edit {
+    font-size: 2vh;
+    font-weight: 500;
+}
+//modal window style
+.modal_wrapper {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgb(0, 0, 0, 0.4);
+    z-index: 1;
+}
+
+.modal_content {
+    border-radius: 12px;
+    background-color: white;
+    margin-bottom: 20vh;
+    z-index: 2;
+}
+.modal_content{
+    pointer-events: all;
+}
+.mark_button{
+    font-size: 2.5vh;
+}
+.mark_button:hover {
+    cursor: pointer;
+    color: #1b4c94;
+}

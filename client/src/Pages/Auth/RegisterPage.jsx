@@ -55,7 +55,19 @@ export const RegisterPage = () => {
                 localStorage.setItem('token', data.data.token);
             }
         });
-
+    const {
+        mutate: isAuth,
+        isLoading: isAuthLoading,
+        error: notAuth,
+    } = useMutation(
+        'Auth',
+        (token) =>
+            $api({
+                url: '/me',
+                type: 'GET',
+                auth: false,
+            }),
+    )
     const SignupSchema = Yup.object().shape({
         fullName: Yup.string()
             .required("FullName is required"),
@@ -75,8 +87,9 @@ export const RegisterPage = () => {
 
     useEffect(() => {
         if (isSuccess) {
-            navigate("/creater");
-            toast.success('🦄 You are logging in!', {
+            isAuth();
+            navigate("/");
+            toast.success('🦄 You are registered!', {
                 position: "bottom-right",
                 autoClose: 5000,
                 hideProgressBar: false,
@@ -88,6 +101,19 @@ export const RegisterPage = () => {
             });
         }
     }, [isSuccess])
+    useEffect(() => {
+        if (error) {
+            toast.error(`🦄 ${error}`, {
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+            });
+        }
+    }, [error])
 
     const handleChange = (e) => {
         e.preventDefault();

@@ -1,4 +1,4 @@
-import React, { FC, useEffect } from "react";
+import { FC, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
 import { Formik, Form, Field, ErrorMessage } from "formik";
@@ -65,7 +65,8 @@ export const Modal = ({ modal, setModal }) => {
 
     useEffect(() => {
         if (isSuccess) {
-            navigate("/creater");
+            navigate("/");
+            setModal(!modal);
             toast.success('🦄 You are logging in!', {
                 position: "bottom-right",
                 autoClose: 5000,
@@ -78,6 +79,21 @@ export const Modal = ({ modal, setModal }) => {
             });
         }
     }, [isSuccess])
+
+    useEffect(() => {
+        if(error){
+            setModal(!modal);
+            toast.error(`🦄 ${error}`, {
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+            });
+        }
+    }, [error])
 
     function onModalActive() {
         setModal(!modal);
@@ -155,9 +171,6 @@ export const Modal = ({ modal, setModal }) => {
                                         name="email"
                                         type="text"
                                         required
-                                        Input={{
-                                            style: { fontSize: "2vmin" },
-                                        }}
                                         InputLabelProps={{
                                             style: { fontSize: "2vmin" },
                                         }}

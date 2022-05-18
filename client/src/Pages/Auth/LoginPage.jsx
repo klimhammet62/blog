@@ -22,7 +22,7 @@ export const LoginPage = () => {
     };
     const formStyle = {
         fontSize: "2vmax",
-        display: "flex", flexDirection: "column", aligItems: "stretch", 
+        display: "flex", flexDirection: "column", aligItems: "stretch",
     };
     const backbtnstyle = { fontSize: "2vmin", margin: "2rem 10vw 0 10vw" };
     const signbtnstyle = { fontSize: "2vmin", margin: "3vh 6vw 0 6vw" };
@@ -38,13 +38,28 @@ export const LoginPage = () => {
         mutate: auth,
         isLoading,
         error,
+        isSuccess,
     } = useMutation(
         'Auth',
         () =>
             $api({
                 url: '/login',
                 type: 'POST',
-                body: { ...initialValues },
+                body: initialValues,
+                auth: false,
+            }),
+    )
+    const {
+        mutate: isAuth,
+        isLoading: isAuthLoading,
+        error: notAuth,
+    } = useMutation(
+        'Auth',
+        (token) =>
+            $api({
+                url: '/me',
+                type: 'GET',
+                headers: { 'Authorization': token },
                 auth: false,
             }),
     )
@@ -60,16 +75,18 @@ export const LoginPage = () => {
 
     useEffect(() => {
         if (error) {
-            toast('🦄 Auth error!', {
-                position: "top-right",
-                autoClose: 5000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-            });
-}
+            if (error) {
+                toast('🦄 Auth error!', {
+                    position: "top-right",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                });
+            }
+        }
     }, [error])
 
     const handleSubmit = (values, props) => {
@@ -130,9 +147,9 @@ export const LoginPage = () => {
                         >
                             <h2 className={styles.font_edit}>{isLoading ? "Loading" : "Sign In"}</h2>
                         </Button>
-                            <Link to="/"><h2 className={styles.font_edit}>Forgot password?</h2></Link>
-                            <h2 className={styles.font_edit}>Don't have an account?</h2>
-                            <Link to="/register"><h2 className={styles.font_edit}>Sign Up</h2></Link>
+                        <Link to="/"><h2 className={styles.font_edit}>Forgot password?</h2></Link>
+                        <h2 className={styles.font_edit}>Don't have an account?</h2>
+                        <Link to="/register"><h2 className={styles.font_edit}>Sign Up</h2></Link>
                         <Button
                             type="submit"
                             color="primary"

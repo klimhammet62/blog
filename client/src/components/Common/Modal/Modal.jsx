@@ -67,7 +67,7 @@ export const Modal = ({ modal, setModal }) => {
         if (isSuccess) {
             navigate("/");
             setModal(!modal);
-            toast.success('🦄 You are logging in!', {
+            toast.success('🦄 You are registered!', {
                 position: "bottom-right",
                 autoClose: 5000,
                 hideProgressBar: false,
@@ -75,11 +75,9 @@ export const Modal = ({ modal, setModal }) => {
                 pauseOnHover: true,
                 draggable: true,
                 progress: undefined,
-                type: "light"
             });
         }
     }, [isSuccess])
-
     useEffect(() => {
         if(error){
             setModal(!modal);

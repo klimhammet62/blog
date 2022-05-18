@@ -97,7 +97,6 @@ export const RegisterPage = () => {
                 pauseOnHover: true,
                 draggable: true,
                 progress: undefined,
-                type: "light"
             });
         }
     }, [isSuccess])

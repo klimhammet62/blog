@@ -3,9 +3,9 @@ import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import styles from "./NewsMain.module.scss";
 
-export const NewsMain: FC = () => {
-  const [isEmpty, setIsEmpty] = useState(true);
-    
+export const NewsMain: React.FC = (): JSX.Element => {
+    const [isEmpty, setIsEmpty] = useState(true);
+
     return (
         <div className={styles.news_main_wrapper}>
             {

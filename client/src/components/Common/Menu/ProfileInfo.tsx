@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import styles from "./ProfileInfo.module.scss";
 
-export const ProfileInfo = () => {
+export const ProfileInfo: React.FC = (): JSX.Element => {
     return (
         <div className={styles.menu_wrapper}>
             <div className={styles.profile_info_wrapper}>

@@ -2,7 +2,7 @@ import { FC, useState } from "react";
 import styles from "./ToggleMenu.module.scss";
 import { ProfileInfo } from "../ProfileInfo";
 
-export const ToggleMenu: FC = () => {
+export const ToggleMenu: React.FC = (): JSX.Element => {
     const [IsShown, setIsShown] = useState(false);
     return IsShown ? (
         <div

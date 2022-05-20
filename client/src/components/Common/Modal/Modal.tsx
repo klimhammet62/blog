@@ -1,4 +1,3 @@
-import { FC, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
 import { Formik, Form, Field, ErrorMessage } from "formik";
@@ -6,26 +5,32 @@ import * as Yup from "yup";
 import { Button, TextField, Grid, Paper } from "@material-ui/core";
 import { Avatar } from "../Avatar/Avatar";
 import { useMutation } from "react-query";
-import { $api } from "../../../http/authApi";
+import { $authApi } from "../../../http/authApi";
 import { Link, useNavigate } from "react-router-dom";
-import { toast } from 'react-toastify';
-import styles from "../../../Pages/Auth/RegisterPage.module.scss";
+import { toast } from "react-toastify";
+import { TModal } from "../../../models/modalType";
+import styles from "../../Pages/Auth/RegisterPage.module.scss";
 
-export const Modal = ({ modal, setModal }) => {
-    const GridStyle = {
+export const Modal: React.FC<TModal> = ({ modal, setModal }): JSX.Element => {
+    const gridStyle: React.CSSProperties = {
         fontSize: "2vh",
         height: "40vh",
         width: "40vw",
-
     };
-    const paperStyle = {
+    const paperStyle: React.CSSProperties = {
         padding: "3vh",
         margin: "0 auto",
     };
-    const formStyle = {
-        display: "flex", flexDirection: "column", aligItems: "stretch", marginTop: "1rem"
+    const formStyle: React.CSSProperties = {
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "stretch",
+        marginTop: "1rem",
     };
-    const signbtnstyle = { fontSize: "2vmin", margin: "1.5rem 8rem 0 8rem", };
+    const signBtnStyle: React.CSSProperties = {
+        fontSize: "2vmin",
+        margin: "1.5rem 8rem 0 8rem",
+    };
     const initialValues = {
         fullName: "",
         email: "",
@@ -41,7 +46,7 @@ export const Modal = ({ modal, setModal }) => {
     } = useMutation(
         "Registration",
         (values) =>
-            $api({
+            $authApi({
                 url: "/register",
                 type: "POST",
                 body: values,
@@ -49,11 +54,11 @@ export const Modal = ({ modal, setModal }) => {
             }),
         {
             onSuccess(data) {
-                localStorage.setItem('token', data.data.token);
+                localStorage.setItem("token", data.data.token);
                 setModal(!modal);
                 isAuth(data.data.token);
                 navigate("/");
-                toast.success('🦄 You are registered!', {
+                toast.success("🦄 You are registered!", {
                     position: "bottom-right",
                     autoClose: 5000,
                     hideProgressBar: false,
@@ -77,18 +82,15 @@ export const Modal = ({ modal, setModal }) => {
         }
     );
 
-    const {
-        mutate: isAuth,
-        isLoading: isAuthLoading,
-    } = useMutation(
-        'Auth',
+    const { mutate: isAuth, isLoading: isAuthLoading } = useMutation(
+        "Auth",
         () =>
-            $api({
-                url: '/me',
-                type: 'GET',
+            $authApi({
+                url: "/me",
+                type: "GET",
                 auth: false,
-            }),
-    )
+            })
+    );
 
     const SignupSchema = Yup.object().shape({
         fullName: Yup.string().required("FullName is required"),
@@ -116,28 +118,25 @@ export const Modal = ({ modal, setModal }) => {
 
     return (
         <div className={styles.modal_wrapper} onClick={onModalActive}>
-            <div className={styles.modal_content} onClick={e => e.stopPropagation()}>
+            <div
+                className={styles.modal_content}
+                onClick={(e) => e.stopPropagation()}
+            >
                 <div className={styles.modal_auth_form}>
                     <Formik
                         initialValues={initialValues}
                         validationSchema={SignupSchema}
                         onSubmit={handleSubmit}
                     >
-                        <Grid style={GridStyle}>
+                        <Grid style={gridStyle}>
                             <Paper style={paperStyle}>
                                 <FontAwesomeIcon
                                     className={styles.mark_button}
                                     icon={faXmark}
                                     onClick={onModalActive}
                                 />
-                                <Grid align="center">
-                                    <Avatar
-                                        sx={{
-                                            display: "flex",
-                                            alignItems: "center",
-                                            marginRight: "0",
-                                        }}
-                                    />
+                                <Grid alignItems="center">
+                                    <Avatar />
                                     <h2>
                                         Зарегистрируйтесь, чтобы создать
                                         новость!
@@ -218,7 +217,7 @@ export const Modal = ({ modal, setModal }) => {
                                         color="primary"
                                         variant="contained"
                                         disabled={isLoading}
-                                        style={signbtnstyle}
+                                        style={signBtnStyle}
                                     >
                                         <h2 className={styles.font_edit}>
                                             {isLoading ? "Loading" : "Sign Up"}

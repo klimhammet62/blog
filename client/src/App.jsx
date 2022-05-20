@@ -1,14 +1,13 @@
 import { useEffect } from "react";
 import { Route, Routes } from "react-router-dom";
-import { LoginPage } from "./Pages/Auth/LoginPage";
-import { RegisterPage } from "./Pages/Auth/RegisterPage";
-import { MainPage } from "./Pages/MainPage/MainPage";
 import { toast } from "react-toastify";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import styles from "./App.module.scss";
 import { useMutation } from "react-query";
-import { $api } from "./http/authApi";
+import { $authApi } from "./http/authApi";
+import { Error404 } from "./components/Pages/404";
+import { routes } from "./Routes/dataRoutes";
+import styles from "./App.module.scss";
 
 export const App = () => {
     const {
@@ -16,7 +15,7 @@ export const App = () => {
         isLoading: isAuthLoading,
         error: notAuth,
     } = useMutation("Auth", () =>
-        $api({
+        $authApi({
             url: "/me",
             type: "GET",
             auth: false,
@@ -33,13 +32,29 @@ export const App = () => {
     }, []);
 
     return (
-        <div className={styles.main}>
-            <Routes>
-                <Route path="/" element={<MainPage />} />
-                <Route path="/login" element={<LoginPage />} />
-                <Route path="/register" element={<RegisterPage />} />
-            </Routes>
+        <Routes>
+            <Route>
+                {routes.map(route => {
+                    if (route.auth && !isAuth) {
+                        return false
+                    }
+
+                    return (
+                        <Route
+                            path={route.path}
+                            exact={route.exact}
+                            key={`route ${route.path}`}
+                        >
+                            <route.component />
+                        </Route>
+                    )
+                })}
+                <Route component={Error404} />
+            </Route>
             <ToastContainer />
-        </div>
-    );
-};
+        </Routes>
+    )
+}
+
+
+

@@ -1,7 +1,7 @@
 import React, { FC } from "react";
 import style from "./ProfileMain.module.scss";
 
-export const ProfileMain: FC = () => {
+export const ProfileMain: React.FC = (): JSX.Element => {
     return (
         <div className={style.wrapper}>
             <h1 className={style.profile_main_title}>Belarty Frontend</h1>

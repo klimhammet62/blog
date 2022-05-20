@@ -1,7 +1,9 @@
 import axios from 'axios';
 
+export const AUTH_API_URL = `${process.env.REACT_APP_CONTENT_API_URL}/auth`;
+
 const instance = axios.create({
-    baseURL: 'http://localhost:5656/auth',
+    baseURL: AUTH_API_URL,
     headers: {
         'Content-Type': 'application/json',
     }

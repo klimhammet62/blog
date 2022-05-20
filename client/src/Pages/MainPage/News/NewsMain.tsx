@@ -1,19 +1,11 @@
-import { FC, useState, useEffect } from "react";
+import { FC, useState } from "react";
 import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import styles from "./NewsMain.module.scss";
 
 export const NewsMain: FC = () => {
   const [isEmpty, setIsEmpty] = useState(true);
-
-  /* function newsChecker() {
-      if (!data) {
-          setIsEmpty(true);
-      }
-  } */
-   /*  useEffect(() => {}, [data]); */
     
-
     return (
         <div className={styles.news_main_wrapper}>
             {

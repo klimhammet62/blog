@@ -9,7 +9,7 @@ const instance = axios.create({
 
 let data
 
-export const $api = async ({ url, type = 'GET', auth = true, body }) => {
+export const $authApi = async ({ url, type = 'GET', auth = true, body }) => {
     if (auth) {
         const token = localStorage.getItem('token');
         instance.defaults.headers.common['Authorization'] = `Bearer ${token}`
@@ -36,7 +36,7 @@ export const $api = async ({ url, type = 'GET', auth = true, body }) => {
         }
         return data.data
     } catch (error) {
-        throw error?.response?.data ? Object.values(error.response.data) : error.message
+        throw error?.response?.data ? error.response.data : error.message
     }
 
 }

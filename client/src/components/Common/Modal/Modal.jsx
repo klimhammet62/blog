@@ -6,7 +6,7 @@ import * as Yup from "yup";
 import { Button, TextField, Grid, Paper } from "@material-ui/core";
 import { Avatar } from "../Avatar/Avatar";
 import { useMutation } from "react-query";
-import { $api } from "../../../store/api/api";
+import { $api } from "../../../http/authApi";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from 'react-toastify';
 import styles from "../../../Pages/Auth/RegisterPage.module.scss";
@@ -38,7 +38,6 @@ export const Modal = ({ modal, setModal }) => {
         mutate: register,
         isLoading,
         isSuccess,
-        error,
     } = useMutation(
         "Registration",
         (values) =>
@@ -50,10 +49,46 @@ export const Modal = ({ modal, setModal }) => {
             }),
         {
             onSuccess(data) {
-                localStorage.setItem("token", data.data.token);
+                localStorage.setItem('token', data.data.token);
+                setModal(!modal);
+                isAuth(data.data.token);
+                navigate("/");
+                toast.success('🦄 You are registered!', {
+                    position: "bottom-right",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                });
+            },
+            onError(data) {
+                toast.error(`🦄 ${data.error}`, {
+                    position: "top-right",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                });
             },
         }
     );
+
+    const {
+        mutate: isAuth,
+        isLoading: isAuthLoading,
+    } = useMutation(
+        'Auth',
+        () =>
+            $api({
+                url: '/me',
+                type: 'GET',
+                auth: false,
+            }),
+    )
 
     const SignupSchema = Yup.object().shape({
         fullName: Yup.string().required("FullName is required"),
@@ -62,36 +97,6 @@ export const Modal = ({ modal, setModal }) => {
             .min(6, "Password must be at least 6 charaters")
             .required("Password is required"),
     });
-
-    useEffect(() => {
-        if (isSuccess) {
-            navigate("/");
-            setModal(!modal);
-            toast.success('🦄 You are registered!', {
-                position: "bottom-right",
-                autoClose: 5000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-            });
-        }
-    }, [isSuccess])
-    useEffect(() => {
-        if(error){
-            setModal(!modal);
-            toast.error(`🦄 ${error}`, {
-                position: "top-right",
-                autoClose: 5000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-            });
-        }
-    }, [error])
 
     function onModalActive() {
         setModal(!modal);

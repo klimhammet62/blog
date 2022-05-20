@@ -24,7 +24,7 @@ export const ProfileInfo = () => {
                             Создать запись
                         </li>
                     </Link>
-                    <Link to="/register" className={styles.link}>
+                    <Link to="/login" className={styles.link}>
                         <li className={styles.auth_li}>Авторизация</li>
                     </Link>
                     <Link to="/" className={styles.link}>

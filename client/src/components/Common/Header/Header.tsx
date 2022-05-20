@@ -1,4 +1,4 @@
-import { FC, useState, useEffect } from "react";
+import { FC, useState } from "react";
 import { Avatar } from "../Avatar/Avatar";
 import { Profile } from "./Profile";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -15,7 +15,6 @@ export const Header: FC = (): JSX.Element => {
         localStorage.removeItem("token");
         navigate("/login");
     };
-    useEffect(() => {}, [modal]);
 
     function toggleHeader() {
         setToggleInput(!toggleInput);

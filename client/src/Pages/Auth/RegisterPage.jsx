@@ -1,11 +1,10 @@
-import React, { useState, useEffect } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { Button, TextField, Grid, Paper } from "@material-ui/core";
 import { useMutation } from "react-query";
 import { Avatar } from "../../components/Common/Avatar/Avatar";
 import { Link, useNavigate } from "react-router-dom";
-import { $api } from "../../store/api/api";
+import { $api } from "../../http/authApi";
 import { toast } from 'react-toastify';
 import styles from "./RegisterPage.module.scss";
 
@@ -40,7 +39,6 @@ export const RegisterPage = () => {
         mutate: register,
         isLoading,
         isSuccess,
-        error
     } = useMutation(
         'Registration',
         (values) =>
@@ -53,21 +51,43 @@ export const RegisterPage = () => {
         {
             onSuccess(data) {
                 localStorage.setItem('token', data.data.token);
+                isAuth(data.data.token);
+                navigate("/");
+                toast.success('🦄 You are registered!', {
+                    position: "bottom-right",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                });
+            },
+            onError(data) {
+                toast.error(`🦄 ${data.error}`, {
+                    position: "top-right",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                });
             }
         });
     const {
         mutate: isAuth,
         isLoading: isAuthLoading,
-        error: notAuth,
     } = useMutation(
         'Auth',
-        (token) =>
+        () =>
             $api({
                 url: '/me',
                 type: 'GET',
                 auth: false,
             }),
     )
+
     const SignupSchema = Yup.object().shape({
         fullName: Yup.string()
             .required("FullName is required"),
@@ -84,35 +104,6 @@ export const RegisterPage = () => {
             props.setSubmitting(false)
         }, 200)
     }
-
-    useEffect(() => {
-        if (isSuccess) {
-            isAuth();
-            navigate("/");
-            toast.success('🦄 You are registered!', {
-                position: "bottom-right",
-                autoClose: 5000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-            });
-        }
-    }, [isSuccess])
-    useEffect(() => {
-        if (error) {
-            toast.error(`🦄 ${error}`, {
-                position: "top-right",
-                autoClose: 5000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-            });
-        }
-    }, [error])
 
     const handleChange = (e) => {
         e.preventDefault();

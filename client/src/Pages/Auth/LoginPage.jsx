@@ -1,4 +1,3 @@
-import React, { useState, useEffect } from "react";
 import { Formik, Form, Field, ErrorMessage } from "formik";
 import * as Yup from "yup";
 import { Button, TextField, Grid, Paper } from "@material-ui/core";
@@ -6,7 +5,7 @@ import { toast } from 'react-toastify';
 import { useMutation } from "react-query";
 import { Avatar } from "../../components/Common/Avatar/Avatar";
 import { Link, useNavigate } from "react-router-dom";
-import { $api } from "../../store/api/api";
+import { $api } from "../../http/authApi";
 import styles from "./LoginPage.module.scss";
 
 export const LoginPage = () => {
@@ -28,7 +27,7 @@ export const LoginPage = () => {
     const signbtnstyle = { fontSize: "2vmin", margin: "3vh 6vw 0 6vw" };
 
     const initialValues = {
-        fullName: "",
+        email: "",
         password: "",
     }
 
@@ -37,70 +36,69 @@ export const LoginPage = () => {
     const {
         mutate: auth,
         isLoading,
-        error,
-        isSuccess,
     } = useMutation(
         'Auth',
-        () =>
+        (values) =>
             $api({
                 url: '/login',
                 type: 'POST',
-                body: initialValues,
+                body: values,
                 auth: false,
             }),
+            {
+                onSuccess(data) {
+                    isAuth(data.data.token);
+                    navigate('/');
+                    toast.success(`🦄 You are logging in!`, {
+                        position: "top-right",
+                        autoClose: 5000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                    });
+                }, 
+                onError(data) {
+                    toast.error(`🦄 ${data.error}`, {
+                        position: "top-right",
+                        autoClose: 5000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                        progress: undefined,
+                    });
+                }
+            }
     )
     const {
         mutate: isAuth,
         isLoading: isAuthLoading,
-        error: notAuth,
     } = useMutation(
         'Auth',
-        (token) =>
+        () =>
             $api({
                 url: '/me',
                 type: 'GET',
-                headers: { 'Authorization': token },
                 auth: false,
             }),
     )
 
     const SignupSchema = Yup.object().shape({
-        fullName: Yup.string()
-            .required("FullName is required"),
         email: Yup.string().email('Invalid email').required('Required'),
         password: Yup.string()
             .min(6, "Password must be at least 6 charaters")
             .required("Password is required"),
     });
 
-    useEffect(() => {
-        if (error) {
-            if (error) {
-                toast('🦄 Auth error!', {
-                    position: "top-right",
-                    autoClose: 5000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                });
-            }
-        }
-    }, [error])
-
     const handleSubmit = (values, props) => {
-        console.log(values);
-        auth();
+        auth(values);
         setTimeout(() => {
             props.resetForm()
             props.setSubmitting(false)
         }, 200)
     }
-
-    const handleChange = (e) => {
-        e.preventDefault();
-    };
 
     return (
         <Formik initialValues={initialValues}
@@ -115,27 +113,20 @@ export const LoginPage = () => {
                     </Grid>
                     <Form style={formStyle}>
                         <Field as={TextField}
-                            label="FullName"
-                            name="fullName"
+                            label="email"
+                            name="email"
                             type="text"
                             required
+                            autoComplete="on"
                             InputProps={{ style: { fontSize: "2vmin" } }}
                             InputLabelProps={{ style: { fontSize: "2vmin" } }}
-                            onCut={handleChange}
-                            onCopy={handleChange}
-                            onPaste={handleChange}
                         />
-                        <ErrorMessage name='fullName' render={msg => <div className={styles.font_error}>{msg}</div>} />
+                        <ErrorMessage name='email' render={msg => <div className={styles.font_error}>{msg}</div>} />
                         <Field as={TextField}
                             label="password"
                             name="password"
                             type="password"
                             required
-                            InputProps={{ style: { fontSize: "2vmin" } }}
-                            InputLabelProps={{ style: { fontSize: "2vmin" } }}
-                            onCut={handleChange}
-                            onCopy={handleChange}
-                            onPaste={handleChange}
                         />
                         <ErrorMessage name='password' render={msg => <div className={styles.font_error}>{msg}</div>} />
                         <Button

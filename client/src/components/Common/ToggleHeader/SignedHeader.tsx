@@ -8,17 +8,17 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { useNavigate } from "react-router-dom";
 import { Profile } from "../Header/Profile";
-import styles from "./SignedInHeader.module.scss";
+import styles from "./SignedHeader.module.scss";
 import { useAppSelector } from "../../../hooks/redux";
 import { useActions } from "../../../hooks/useActions";
 import debounce from "lodash.debounce";
 
-export const SignedInHeader: React.FC = (): JSX.Element => {
+export const SignedHeader: React.FC = (): JSX.Element => {
     const [toggleInput, setToggleInput] = useState<boolean>(true);
     const [modal, setModal] = useState<boolean>(false);
     const navigate = useNavigate();
     const { filterSearch } = useActions();
-const searchDebounce = debounce();
+    const searchDebounce = debounce();
     const token = localStorage.getItem("token");
 
     const signOut = () => {

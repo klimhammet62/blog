@@ -1,6 +1,6 @@
 import { FC, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { SignedInHeader } from "../ToggleHeader/SignedInHeader";
+import { SignedHeader } from "../ToggleHeader/SignedHeader";
 import { NotSignedHeader } from "../ToggleHeader/NotSignedHeader";
 import styles from "./Header.module.scss";
 
@@ -14,7 +14,7 @@ export const Header: FC = (): JSX.Element => {
 
     return (
         <div className={styles.header}>
-            {token ? <SignedInHeader /> : <NotSignedHeader />}
+            {token ? <SignedHeader /> : <NotSignedHeader />}
         </div>
     );
 };

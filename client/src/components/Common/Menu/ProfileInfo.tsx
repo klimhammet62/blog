@@ -2,6 +2,9 @@ import { Link } from "react-router-dom";
 import styles from "./ProfileInfo.module.scss";
 
 export const ProfileInfo: React.FC = (): JSX.Element => {
+    const signOut = () => {
+        localStorage.removeItem("token");
+    };
     return (
         <div className={styles.menu_wrapper}>
             <div className={styles.profile_info_wrapper}>
@@ -19,7 +22,7 @@ export const ProfileInfo: React.FC = (): JSX.Element => {
                     <Link to="/profile" className={styles.link}>
                         <li className={styles.profile_li}>Мой профиль</li>
                     </Link>
-                    <Link to="/creater" className={styles.link}>
+                    <Link to="/dashboard" className={styles.link}>
                         <li className={styles.create_news_li}>
                             Создать запись
                         </li>
@@ -27,7 +30,7 @@ export const ProfileInfo: React.FC = (): JSX.Element => {
                     <Link to="/login" className={styles.link}>
                         <li className={styles.auth_li}>Авторизация</li>
                     </Link>
-                    <Link to="/" className={styles.link}>
+                    <Link to="/" className={styles.link} onClick={signOut}>
                         <li className={styles.exit_li}>Выйти</li>
                     </Link>
                     {/* сделать редирект на авторизацию, если не зарегистрирован */}

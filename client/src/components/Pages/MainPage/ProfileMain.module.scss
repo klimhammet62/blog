@@ -7,14 +7,14 @@
     display: flex;
     align-items: left;
     flex-flow: column wrap;
-    margin: 3% 5% 0 4%;
+    margin: 2% 5% 0 4%;
 }
 .profile_main_title {
-    font-weight: 800;
+    font-weight: 500;
     font-size: 6vh;
 }
 .profile_frontend_blog_title {
-    font-weight: 500;
+    font-weight: 300;
     font-size: 3vh;
     color: #aaaaaa;
 }
@@ -27,8 +27,8 @@
     font-weight: 700;
 }
 .profile_about_me {
-    font-weight: 500;
-    font-size: 2vh;
+    font-weight: 300;
+    font-size: 1.1rem;
 }
 .social_media_wrapper {
     display: flex;

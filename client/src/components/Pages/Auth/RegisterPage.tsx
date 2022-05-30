@@ -1,33 +1,34 @@
-import { Formik, Form, Field, ErrorMessage } from "formik";
+import { useEffect } from "react";
+import { Formik, Form, Field, ErrorMessage, FormikHelpers } from "formik";
 import * as Yup from "yup";
 import { Button, TextField, Grid, Paper } from "@material-ui/core";
-import { useMutation } from "react-query";
 import { Avatar } from "../../Common/Avatar/Avatar";
 import { Link, useNavigate } from "react-router-dom";
-import { $authApi } from "../../../http/authApi";
 import { toast } from "react-toastify";
+import { $authApi } from "../../../service/authService";
+import {
+    TRegisterSuccess,
+    TRegister,
+    TRegisterProps,
+} from "../../../models/AuthTypes";
 import styles from "./RegisterPage.module.scss";
 
-export const RegisterPage = (): JSX.Element => {
-    const gridStyle: React.CSSProperties = {
-        marginTop: "14vh",
-        fontSize: "2vmin",
-    };
+export const RegisterPage: React.FC = (): JSX.Element => {
     const paperStyle: React.CSSProperties = {
         padding: "3vmin",
         height: "32rem",
-        width: "60vh",
-        margin: "0 auto",
+        width: "40rem",
+        margin: "8% auto",
     };
     const formStyle: React.CSSProperties = {
         fontSize: "2vmax",
         display: "flex",
         flexDirection: "column",
-        aligItems: "stretch",
+        alignItems: "stretch",
     };
     const backBtnStyle: React.CSSProperties = {
         fontSize: "2vmin",
-        margin: "2rem 10vw 0 10vw",
+        margin: "2vh 10vw 0 16vw",
     };
     const signbtnstyle: React.CSSProperties = {
         fontSize: "2vmin",
@@ -41,57 +42,43 @@ export const RegisterPage = (): JSX.Element => {
     };
 
     const navigate = useNavigate();
-
-    const {
-        mutate: register,
-        isLoading,
-        isSuccess,
-    } = useMutation(
-        "Registration",
-        (values) =>
-            $authApi({
-                url: "/register",
-                type: "POST",
-                body: values,
-                auth: false,
-            }),
+    const [
+        registerUser,
         {
-            onSuccess(data) {
-                localStorage.setItem("token", data.data.token);
-                isAuth(data.data.token);
-                navigate("/");
-                toast.success("🦄 You are registered!", {
-                    position: "bottom-right",
-                    autoClose: 5000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                });
-            },
-            onError(data) {
-                toast.error(`🦄 ${data.error}`, {
-                    position: "top-right",
-                    autoClose: 5000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                });
-            },
+            data: registerData,
+            error: registerError,
+            isSuccess: registerSuccess,
+            isLoading: registerIsLoading,
+        },
+    ] = $authApi.useRegisterUserMutation();
+
+    useEffect(() => {
+        if (registerSuccess && registerData) {
+            localStorage.setItem("token", registerData.token);
+            navigate("/");
+            toast.success("🦄 You are registered!", {
+                position: "bottom-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+            });
         }
-    );
-    const { mutate: isAuth, isLoading: isAuthLoading } = useMutation(
-        "Auth",
-        () =>
-            $authApi({
-                url: "/me",
-                type: "GET",
-                auth: false,
-            })
-    );
+    }, [registerSuccess]);
+/* ПРИ РЕГЕ РАБОТАЕТ ПРИ ВХОДЕ НЕТ */
+    if (registerError) {
+        toast.error(`🦄 ${registerError.data.error}`, {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+        });
+    }
 
     const SignupSchema = Yup.object().shape({
         fullName: Yup.string().required("FullName is required"),
@@ -101,15 +88,18 @@ export const RegisterPage = (): JSX.Element => {
             .required("Password is required"),
     });
 
-    const handleSubmit = (values, props) => {
-        register(values);
+    const handleSubmit = async (
+        values: TRegister,
+        props: FormikHelpers<TRegisterProps>
+    ) => {
+        await registerUser({ ...values } as TRegisterSuccess);
         setTimeout(() => {
             props.resetForm();
             props.setSubmitting(false);
         }, 200);
     };
 
-    const handleChange = (e) => {
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         e.preventDefault();
     };
     return (
@@ -119,115 +109,97 @@ export const RegisterPage = (): JSX.Element => {
                 validationSchema={SignupSchema}
                 onSubmit={handleSubmit}
             >
-                <Grid style={gridStyle}>
-                    <Paper style={paperStyle}>
-                        <Grid alignItems="center">
-                            <Avatar />
-                            <h2>Зарегистрируйтесь, чтобы создать новость!</h2>
-                        </Grid>
-                        <Form style={formStyle}>
-                            <Field
-                                as={TextField}
-                                label="FullName"
-                                name="fullName"
-                                type="text"
-                                required
-                                InputProps={{ style: { fontSize: "2vmin" } }}
-                                InputLabelProps={{
-                                    style: { fontSize: "2vmin" },
-                                }}
-                                onCut={handleChange}
-                                onCopy={handleChange}
-                                onPaste={handleChange}
-                            />
-                            <ErrorMessage
-                                name="fullName"
-                                render={(msg) => (
-                                    <div className={styles.font_error}>
-                                        {msg}
-                                    </div>
-                                )}
-                            />
-                            <Field
-                                as={TextField}
-                                label="email"
-                                name="email"
-                                type="text"
-                                required
-                                InputProps={{ style: { fontSize: "2vmin" } }}
-                                InputLabelProps={{
-                                    style: { fontSize: "2vmin" },
-                                }}
-                                onCut={handleChange}
-                                onCopy={handleChange}
-                                onPaste={handleChange}
-                            />
-                            <ErrorMessage
-                                name="email"
-                                render={(msg) => (
-                                    <div className={styles.font_error}>
-                                        {msg}
-                                    </div>
-                                )}
-                            />
-                            <Field
-                                as={TextField}
-                                label="password"
-                                name="password"
-                                type="password"
-                                required
-                                InputProps={{ style: { fontSize: "2vmin" } }}
-                                InputLabelProps={{
-                                    style: { fontSize: "2vmin" },
-                                }}
-                                onCut={handleChange}
-                                onCopy={handleChange}
-                                onPaste={handleChange}
-                            />
-                            <ErrorMessage
-                                name="password"
-                                render={(msg) => (
-                                    <div className={styles.font_error}>
-                                        {msg}
-                                    </div>
-                                )}
-                            />
-                            <Button
-                                type="submit"
-                                color="primary"
-                                variant="contained"
-                                disabled={isLoading}
-                                style={signbtnstyle}
-                            >
-                                <h2 className={styles.font_edit}>
-                                    {isLoading ? "Loading" : "Sign Up"}
-                                </h2>
-                            </Button>
-                            <Link to="/">
-                                <h2 className={styles.font_edit}>
-                                    Forgot password?
-                                </h2>
-                            </Link>
+                <Paper style={paperStyle}>
+                    <Grid>
+                        <Avatar />
+                        <h2>Зарегистрируйтесь, чтобы создать новость!</h2>
+                    </Grid>
+                    <Form style={formStyle}>
+                        <Field
+                            as={TextField}
+                            label="FullName"
+                            name="fullName"
+                            type="text"
+                            required
+                            onCut={handleChange}
+                            onCopy={handleChange}
+                            onPaste={handleChange}
+                            autoComplete="fullName"
+                        />
+                        <ErrorMessage
+                            name="fullName"
+                            render={(msg) => (
+                                <div className={styles.font_error}>{msg}</div>
+                            )}
+                        />
+                        <Field
+                            as={TextField}
+                            label="email"
+                            name="email"
+                            type="text"
+                            required
+                            onCut={handleChange}
+                            onCopy={handleChange}
+                            onPaste={handleChange}
+                            autoComplete="email"
+                        />
+                        <ErrorMessage
+                            name="email"
+                            render={(msg) => (
+                                <div className={styles.font_error}>{msg}</div>
+                            )}
+                        />
+                        <Field
+                            as={TextField}
+                            label="password"
+                            name="password"
+                            type="password"
+                            required
+                            onCut={handleChange}
+                            onCopy={handleChange}
+                            onPaste={handleChange}
+                            autoComplete="current-password"
+                        />
+                        <ErrorMessage
+                            name="password"
+                            render={(msg) => (
+                                <div className={styles.font_error}>{msg}</div>
+                            )}
+                        />
+                        <Button
+                            type="submit"
+                            color="primary"
+                            variant="contained"
+                            disabled={registerIsLoading}
+                            style={signbtnstyle}
+                        >
                             <h2 className={styles.font_edit}>
-                                Do you have an account?
+                                {registerIsLoading ? "Loading" : "Sign Up"}
                             </h2>
-                            <Link to="/login">
-                                <h2 className={styles.font_edit}>Sign In</h2>
-                            </Link>
+                        </Button>
+                        <Link to="/">
+                            <h2 className={styles.font_edit}>
+                                Forgot password?
+                            </h2>
+                        </Link>
+                        <h2 className={styles.font_edit}>
+                            Do you have an account?
+                        </h2>
+                        <Link to="/login">
+                            <h2 className={styles.font_edit}>Sign In</h2>
+                        </Link>
+                        <Link to="/" className={styles.link}>
                             <Button
-                                type="submit"
                                 color="primary"
                                 variant="contained"
                                 style={backBtnStyle}
-                                disabled={isLoading}
+                                disabled={registerIsLoading}
                             >
-                                <Link to="/" className={styles.link}>
-                                    Home
-                                </Link>
+                                Home
                             </Button>
-                        </Form>
-                    </Paper>
-                </Grid>
+                        </Link>
+                    </Form>
+                </Paper>
             </Formik>
         </>
     );

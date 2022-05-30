@@ -34,7 +34,6 @@ export const RegisterPage: React.FC = (): JSX.Element => {
         fontSize: "2vmin",
         margin: "3vh 6vw 0 6vw",
     };
-
     const initialValues = {
         fullName: "",
         email: "",
@@ -52,21 +51,19 @@ export const RegisterPage: React.FC = (): JSX.Element => {
         },
     ] = $authApi.useRegisterUserMutation();
 
-    useEffect(() => {
-        if (registerSuccess && registerData) {
-            localStorage.setItem("token", registerData.token);
-            navigate("/");
-            toast.success("🦄 You are registered!", {
-                position: "bottom-right",
-                autoClose: 5000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-            });
-        }
-    }, [registerSuccess]);
+   if (registerSuccess && registerData) {
+       localStorage.setItem("token", registerData.token);
+       navigate("/");
+       toast.success("🦄 You are registered!", {
+           position: "bottom-right",
+           autoClose: 5000,
+           hideProgressBar: false,
+           closeOnClick: true,
+           pauseOnHover: true,
+           draggable: true,
+           progress: undefined,
+       });
+   }
 /* ПРИ РЕГЕ РАБОТАЕТ ПРИ ВХОДЕ НЕТ */
     if (registerError) {
         toast.error(`🦄 ${registerError.data.error}`, {

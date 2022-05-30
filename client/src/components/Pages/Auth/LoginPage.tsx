@@ -60,7 +60,7 @@ export const LoginPage: React.FC = (): JSX.Element => {
     }
 
     if (LoginError) {
-        toast.error(`🦄 ${LoginError.data.error}`, {
+        toast.error(`🦄 ${LoginError}`, {
             position: "top-right",
             autoClose: 5000,
             hideProgressBar: false,

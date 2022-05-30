@@ -51,27 +51,28 @@ export const Modal: React.FC<TModal> = ({ modal, setModal }): JSX.Element => {
 
     const { data: isAuthData } = $authApi.useIsAuthUserQuery();
 
-        if (registerSuccess && registerData) {
-            localStorage.setItem("token", registerData.token);
-            setModal(!modal);
-            navigate("/");
-            toast.success("🦄 You are registered!", {
-                position: "bottom-right",
-                autoClose: 5000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-            });
-        }
+    if (registerSuccess && registerData) {
+        localStorage.setItem("token", registerData.token);
+        setModal(!modal);
+        navigate("/");
+        toast.success("🦄 You are registered!", {
+            position: "bottom-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+        });
+    }
 
-        if (isAuthData) {
-            navigate("/");
-        }
-        
-        if (registerError) {
-            toast.error(`🦄 ${registerError.data.error}`, {
+    if (isAuthData) {
+        navigate("/");
+    }
+    
+    switch (!!registerError === false && registerError) {
+        case Array.isArray(registerError?.data.errors):
+            toast.error(`🦄 ${registerError?.data.error}`, {
                 position: "top-right",
                 autoClose: 5000,
                 hideProgressBar: false,
@@ -80,8 +81,19 @@ export const Modal: React.FC<TModal> = ({ modal, setModal }): JSX.Element => {
                 draggable: true,
                 progress: undefined,
             });
-        }
-
+            break;
+        case !!registerError?.data.error:
+            toast.error(`🦄 ${registerError?.data.errors[0].message}`, {
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+            });
+            break;
+    }
 
     const SignupSchema = Yup.object().shape({
         fullName: Yup.string().required("FullName is required"),

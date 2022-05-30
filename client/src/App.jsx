@@ -14,8 +14,8 @@ export const App = () => {
     } = $authApi.useIsAuthUserQuery();
 
     useEffect(() => {
-        console.log(isAuthData);
-        if (isSuccess) {
+        console.log(isSuccess);
+        if (isSuccess, isAuthData) {
             toast(
                 "👋Привет! Зарегай аккаунт, чтобы получить возможность выкладывать новости!"
             )

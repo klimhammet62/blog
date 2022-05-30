@@ -41,7 +41,7 @@ export const LoginPage: React.FC = (): JSX.Element => {
         {
             data: loginData,
             isLoading: loginIsLoading,
-            error: LoginError,
+            error: loginError,
             isSuccess: isLoginSuccess,
         },
     ] = $authApi.useLoginUserMutation();
@@ -59,16 +59,29 @@ export const LoginPage: React.FC = (): JSX.Element => {
         });
     }
 
-    if (LoginError) {
-        toast.error(`🦄 ${LoginError}`, {
-            position: "top-right",
-            autoClose: 5000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-        });
+    switch (!!loginError === false && loginError) {
+        case Array.isArray(loginError?.data.errors):
+            toast.error(`🦄 ${loginError?.data.error}`, {
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+            });
+            break;
+        case !!loginError?.data.error:
+            toast.error(`🦄 ${loginError?.data.errors[0].message}`, {
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+            });
+            break;
     }
 
     const SignupSchema = Yup.object().shape({

@@ -65,17 +65,30 @@ export const RegisterPage: React.FC = (): JSX.Element => {
        });
    }
 /* ПРИ РЕГЕ РАБОТАЕТ ПРИ ВХОДЕ НЕТ */
-    if (registerError) {
-        toast.error(`🦄 ${registerError.data.error}`, {
-            position: "top-right",
-            autoClose: 5000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: true,
-            draggable: true,
-            progress: undefined,
-        });
-    }
+     switch (!!registerError === false && registerError) {
+         case Array.isArray(registerError?.data.errors):
+             toast.error(`🦄 ${registerError?.data.error}`, {
+                 position: "top-right",
+                 autoClose: 5000,
+                 hideProgressBar: false,
+                 closeOnClick: true,
+                 pauseOnHover: true,
+                 draggable: true,
+                 progress: undefined,
+             });
+             break;
+         case !!registerError?.data.error:
+             toast.error(`🦄 ${registerError?.data.errors[0].message}`, {
+                 position: "top-right",
+                 autoClose: 5000,
+                 hideProgressBar: false,
+                 closeOnClick: true,
+                 pauseOnHover: true,
+                 draggable: true,
+                 progress: undefined,
+             });
+             break;
+     }
 
     const SignupSchema = Yup.object().shape({
         fullName: Yup.string().required("FullName is required"),

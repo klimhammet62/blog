@@ -1,7 +1,16 @@
+import {useEffect} from "react";
+import { useNavigate } from "react-router-dom";
+
 export const Error404: React.FC = (): JSX.Element => {
+    const navigate = useNavigate();
+     useEffect(() => {
+         setTimeout(() => {
+             navigate("/");
+         }, 2000);
+     });
     return (
         <>
-            <div className='wrapper-inner-page'>404 page not found</div>
+            <div>404 page not found</div>
         </>
-    )
-}
+    );
+};

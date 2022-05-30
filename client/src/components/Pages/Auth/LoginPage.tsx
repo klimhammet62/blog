@@ -1,23 +1,20 @@
-import { Formik, Form, Field, ErrorMessage } from "formik";
+import { useEffect } from "react";
+import { Formik, Form, Field, ErrorMessage, FormikHelpers } from "formik";
 import * as Yup from "yup";
 import { Button, TextField, Grid, Paper } from "@material-ui/core";
-import { toast } from 'react-toastify';
-import { useMutation } from "react-query";
+import { toast } from "react-toastify";
 import { Avatar } from "../../Common/Avatar/Avatar";
 import { Link, useNavigate } from "react-router-dom";
-import { $authApi } from "../../../http/authApi";
+import { $authApi } from "../../../service/authService";
+import { TLoginSuccess, TLogin, TLoginProps } from "../../../models/AuthTypes";
 import styles from "./LoginPage.module.scss";
 
-export const LoginPage = (): JSX.Element => {
-    const gridStyle: React.CSSProperties = {
-        marginTop: "14vh",
-        fontSize: "2vmin",
-    };
+export const LoginPage: React.FC = (): JSX.Element => {
     const paperStyle: React.CSSProperties = {
         padding: "3vmin",
         height: "30rem",
-        width: "60vh",
-        margin: "0 auto",
+        width: "30rem",
+        margin: "8% auto",
     };
     const formStyle: React.CSSProperties = {
         fontSize: "2vmax",
@@ -29,63 +26,50 @@ export const LoginPage = (): JSX.Element => {
         fontSize: "2vmin",
         margin: "2rem 10vw 0 10vw",
     };
-    const signbtnstyle: React.CSSProperties = {
+    const signBtnStyle: React.CSSProperties = {
         fontSize: "2vmin",
         margin: "3vh 6vw 0 6vw",
     };
-
     const initialValues = {
         email: "",
         password: "",
     };
 
     const navigate = useNavigate();
-
-    const { mutate: auth, isLoading } = useMutation(
-        "Auth",
-        (values) =>
-            $authApi({
-                url: "/login",
-                type: "POST",
-                body: values,
-                auth: false,
-            }),
+    const [
+        loginUser,
         {
-            onSuccess(data) {
-                isAuth(data.data.token);
-                navigate("/");
-                toast.success(`🦄 You are logging in!`, {
-                    position: "top-right",
-                    autoClose: 5000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                });
-            },
-            onError(data) {
-                toast.error(`🦄 ${data.error}`, {
-                    position: "top-right",
-                    autoClose: 5000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                });
-            },
-        }
-    );
-    const { mutate: isAuth, isLoading: isAuthLoading } = useMutation(
-        "Auth",
-        () =>
-            $authApi({
-                url: "/me",
-                type: "GET",
-                auth: false,
-            })
-    );
+            data: loginData,
+            isLoading: loginIsLoading,
+            error: LoginError,
+            isSuccess: isLoginSuccess,
+        },
+    ] = $authApi.useLoginUserMutation();
+
+    if (isLoginSuccess && loginData) {
+        navigate("/");
+        toast.success(`🦄 You are logging in!`, {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+        });
+    }
+
+    if (LoginError) {
+        toast.error(`🦄 ${LoginError.data.error}`, {
+            position: "top-right",
+            autoClose: 5000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: true,
+            draggable: true,
+            progress: undefined,
+        });
+    }
 
     const SignupSchema = Yup.object().shape({
         email: Yup.string().email("Invalid email").required("Required"),
@@ -94,8 +78,11 @@ export const LoginPage = (): JSX.Element => {
             .required("Password is required"),
     });
 
-    const handleSubmit = (values, props) => {
-        auth(values);
+    const handleSubmit = async (
+        values: TLogin,
+        props: FormikHelpers<TLoginProps>
+    ) => {
+        await loginUser({ ...values } as TLoginSuccess);
         setTimeout(() => {
             props.resetForm();
             props.setSubmitting(false);
@@ -108,78 +95,71 @@ export const LoginPage = (): JSX.Element => {
             validationSchema={SignupSchema}
             onSubmit={handleSubmit}
         >
-            <Grid style={gridStyle}>
-                <Paper style={paperStyle}>
-                    <Grid alignItems="center">
-                        <Avatar />
-                        <h2>Войдите в аккаунт, чтобы создать новость!</h2>
-                    </Grid>
-                    <Form style={formStyle}>
-                        <Field
-                            as={TextField}
-                            label="email"
-                            name="email"
-                            type="text"
-                            required
-                            autoComplete="on"
-                            InputProps={{ style: { fontSize: "2vmin" } }}
-                            InputLabelProps={{ style: { fontSize: "2vmin" } }}
-                        />
-                        <ErrorMessage
-                            name="email"
-                            render={(msg) => (
-                                <div className={styles.font_error}>{msg}</div>
-                            )}
-                        />
-                        <Field
-                            as={TextField}
-                            label="password"
-                            name="password"
-                            type="password"
-                            required
-                        />
-                        <ErrorMessage
-                            name="password"
-                            render={(msg) => (
-                                <div className={styles.font_error}>{msg}</div>
-                            )}
-                        />
-                        <Button
-                            type="submit"
-                            color="primary"
-                            variant="contained"
-                            disabled={isLoading}
-                            style={signbtnstyle}
-                        >
-                            <h2 className={styles.font_edit}>
-                                {isLoading ? "Loading" : "Sign In"}
-                            </h2>
-                        </Button>
-                        <Link to="/">
-                            <h2 className={styles.font_edit}>
-                                Forgot password?
-                            </h2>
-                        </Link>
+            <Paper style={paperStyle}>
+                <Grid>
+                    <Avatar />
+                    <h2>Войдите в аккаунт, чтобы создать новость!</h2>
+                </Grid>
+                <Form style={formStyle}>
+                    <Field
+                        as={TextField}
+                        label="email"
+                        name="email"
+                        type="text"
+                        required
+                        autoComplete="email"
+                    />
+                    <ErrorMessage
+                        name="fullName"
+                        render={(msg) => (
+                            <div className={styles.font_error}>{msg}</div>
+                        )}
+                    />
+                    <Field
+                        as={TextField}
+                        label="password"
+                        name="password"
+                        type="password"
+                        required
+                        autoComplete="password"
+                    />
+                    <ErrorMessage
+                        name="password"
+                        render={(msg) => (
+                            <div className={styles.font_error}>{msg}</div>
+                        )}
+                    />
+                    <Button
+                        type="submit"
+                        color="primary"
+                        variant="contained"
+                        disabled={loginIsLoading}
+                        style={signBtnStyle}
+                    >
                         <h2 className={styles.font_edit}>
-                            Don't have an account?
+                            {loginIsLoading ? "Loading" : "Sign In"}
                         </h2>
-                        <Link to="/register">
-                            <h2 className={styles.font_edit}>Sign Up</h2>
-                        </Link>
+                    </Button>
+                    <Link to="/">
+                        <h2 className={styles.font_edit}>Forgot password?</h2>
+                    </Link>
+                    <h2 className={styles.font_edit}>Don't have an account?</h2>
+                    <Link to="/register">
+                        <h2 className={styles.font_edit}>Sign Up</h2>
+                    </Link>
+                    <Link to="/" className={styles.link}>
                         <Button
                             type="submit"
                             color="primary"
                             variant="contained"
                             style={backBtnStyle}
-                            disabled={isLoading}
+                            disabled={loginIsLoading}
                         >
-                            <Link to="/" className={styles.link}>
-                                Home
-                            </Link>
+                            Home
                         </Button>
-                    </Form>
-                </Paper>
-            </Grid>
+                    </Link>
+                </Form>
+            </Paper>
         </Formik>
     );
 };

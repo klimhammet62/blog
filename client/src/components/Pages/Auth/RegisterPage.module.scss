@@ -2,6 +2,8 @@
     cursor: pointer;
     color: rgba(255, 255, 255, 0.922);
     text-decoration: none;
+    display: flex;
+    align-items: center;
 }
 .wrapper {
     display: flex;
@@ -30,7 +32,7 @@
     top: 0;
     left: 0;
     width: 100vw;
-    height: 100vh;
+    height: 120vh;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -44,10 +46,10 @@
     margin-bottom: 20vh;
     z-index: 2;
 }
-.modal_content{
+.modal_content {
     pointer-events: all;
 }
-.mark_button{
+.mark_button {
     font-size: 2.5vh;
 }
 .mark_button:hover {

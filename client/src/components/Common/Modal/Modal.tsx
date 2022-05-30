@@ -1,22 +1,22 @@
+import { useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
-import { Formik, Form, Field, ErrorMessage } from "formik";
+import { Formik, Form, Field, ErrorMessage, FormikHelpers } from "formik";
 import * as Yup from "yup";
 import { Button, TextField, Grid, Paper } from "@material-ui/core";
 import { Avatar } from "../Avatar/Avatar";
-import { useMutation } from "react-query";
-import { $authApi } from "../../../http/authApi";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { TModal } from "../../../models/modalType";
+import { $authApi } from "../../../service/authService";
+import {
+    TRegister,
+    TRegisterProps,
+    TRegisterSuccess,
+} from "../../../models/AuthTypes";
 import styles from "../../Pages/Auth/RegisterPage.module.scss";
 
 export const Modal: React.FC<TModal> = ({ modal, setModal }): JSX.Element => {
-    const gridStyle: React.CSSProperties = {
-        fontSize: "2vh",
-        height: "40vh",
-        width: "40vw",
-    };
     const paperStyle: React.CSSProperties = {
         padding: "3vh",
         margin: "0 auto",
@@ -39,58 +39,49 @@ export const Modal: React.FC<TModal> = ({ modal, setModal }): JSX.Element => {
 
     const navigate = useNavigate();
 
-    const {
-        mutate: register,
-        isLoading,
-        isSuccess,
-    } = useMutation(
-        "Registration",
-        (values) =>
-            $authApi({
-                url: "/register",
-                type: "POST",
-                body: values,
-                auth: false,
-            }),
+    const [
+        registerUser,
         {
-            onSuccess(data) {
-                localStorage.setItem("token", data.data.token);
-                setModal(!modal);
-                isAuth(data.data.token);
-                navigate("/");
-                toast.success("🦄 You are registered!", {
-                    position: "bottom-right",
-                    autoClose: 5000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                });
-            },
-            onError(data) {
-                toast.error(`🦄 ${data.error}`, {
-                    position: "top-right",
-                    autoClose: 5000,
-                    hideProgressBar: false,
-                    closeOnClick: true,
-                    pauseOnHover: true,
-                    draggable: true,
-                    progress: undefined,
-                });
-            },
-        }
-    );
+            data: registerData,
+            error: registerError,
+            isLoading: registerIsLoading,
+            isSuccess: registerSuccess,
+        },
+    ] = $authApi.useRegisterUserMutation();
 
-    const { mutate: isAuth, isLoading: isAuthLoading } = useMutation(
-        "Auth",
-        () =>
-            $authApi({
-                url: "/me",
-                type: "GET",
-                auth: false,
-            })
-    );
+    const { data: isAuthData } = $authApi.useIsAuthUserQuery();
+
+        if (registerSuccess && registerData) {
+            localStorage.setItem("token", registerData.token);
+            setModal(!modal);
+            navigate("/");
+            toast.success("🦄 You are registered!", {
+                position: "bottom-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+            });
+        }
+
+        if (isAuthData) {
+            navigate("/");
+        }
+        
+        if (registerError) {
+            toast.error(`🦄 ${registerError.data.error}`, {
+                position: "top-right",
+                autoClose: 5000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+                progress: undefined,
+            });
+        }
+
 
     const SignupSchema = Yup.object().shape({
         fullName: Yup.string().required("FullName is required"),
@@ -104,16 +95,15 @@ export const Modal: React.FC<TModal> = ({ modal, setModal }): JSX.Element => {
         setModal(!modal);
     }
 
-    const handleSubmit = (values, props) => {
-        register(values);
+    const handleSubmit = async (
+        values: TRegister,
+        props: FormikHelpers<TRegisterProps>
+    ) => {
+        await registerUser({ ...values } as TRegisterSuccess);
         setTimeout(() => {
             props.resetForm();
             props.setSubmitting(false);
         }, 200);
-    };
-
-    const handleChange = (e) => {
-        e.preventDefault();
     };
 
     return (
@@ -128,117 +118,94 @@ export const Modal: React.FC<TModal> = ({ modal, setModal }): JSX.Element => {
                         validationSchema={SignupSchema}
                         onSubmit={handleSubmit}
                     >
-                        <Grid style={gridStyle}>
-                            <Paper style={paperStyle}>
-                                <FontAwesomeIcon
-                                    className={styles.mark_button}
-                                    icon={faXmark}
-                                    onClick={onModalActive}
+                        <Paper style={paperStyle}>
+                            <FontAwesomeIcon
+                                className={styles.mark_button}
+                                icon={faXmark}
+                                onClick={onModalActive}
+                            />
+                            <Grid>
+                                <Avatar />
+                                <h2>
+                                    Зарегистрируйтесь, чтобы создать новость!
+                                </h2>
+                            </Grid>
+                            <Form style={formStyle}>
+                                <Field
+                                    as={TextField}
+                                    label="FullName"
+                                    name="fullName"
+                                    type="text"
+                                    autoFocus
+                                    required
                                 />
-                                <Grid alignItems="center">
-                                    <Avatar />
-                                    <h2>
-                                        Зарегистрируйтесь, чтобы создать
-                                        новость!
-                                    </h2>
-                                </Grid>
-                                <Form style={formStyle}>
-                                    <Field
-                                        as={TextField}
-                                        label="FullName"
-                                        name="fullName"
-                                        type="text"
-                                        required
-                                        InputProps={{
-                                            style: { fontSize: "2vmin" },
-                                        }}
-                                        InputLabelProps={{
-                                            style: { fontSize: "2vmin" },
-                                        }}
-                                        onCut={handleChange}
-                                        onCopy={handleChange}
-                                        onPaste={handleChange}
-                                    />
-                                    <ErrorMessage
-                                        name="fullName"
-                                        render={(msg) => (
-                                            <div className={styles.font_error}>
-                                                {msg}
-                                            </div>
-                                        )}
-                                    />
-                                    <Field
-                                        as={TextField}
-                                        label="email"
-                                        name="email"
-                                        type="text"
-                                        required
-                                        InputLabelProps={{
-                                            style: { fontSize: "2vmin" },
-                                        }}
-                                        onCut={handleChange}
-                                        onCopy={handleChange}
-                                        onPaste={handleChange}
-                                    />
-                                    <ErrorMessage
-                                        name="email"
-                                        render={(msg) => (
-                                            <div className={styles.font_error}>
-                                                {msg}
-                                            </div>
-                                        )}
-                                    />
-                                    <Field
-                                        as={TextField}
-                                        label="password"
-                                        name="password"
-                                        type="password"
-                                        required
-                                        InputProps={{
-                                            style: { fontSize: "2vmin" },
-                                        }}
-                                        InputLabelProps={{
-                                            style: { fontSize: "2vmin" },
-                                        }}
-                                        onCut={handleChange}
-                                        onCopy={handleChange}
-                                        onPaste={handleChange}
-                                    />
-                                    <ErrorMessage
-                                        name="password"
-                                        render={(msg) => (
-                                            <div className={styles.font_error}>
-                                                {msg}
-                                            </div>
-                                        )}
-                                    />
-                                    <Button
-                                        type="submit"
-                                        color="primary"
-                                        variant="contained"
-                                        disabled={isLoading}
-                                        style={signBtnStyle}
-                                    >
-                                        <h2 className={styles.font_edit}>
-                                            {isLoading ? "Loading" : "Sign Up"}
-                                        </h2>
-                                    </Button>
-                                    <Link to="/">
-                                        <h2 className={styles.font_edit}>
-                                            Forgot password?
-                                        </h2>
-                                    </Link>
+                                <ErrorMessage
+                                    name="fullName"
+                                    render={(msg) => (
+                                        <div className={styles.font_error}>
+                                            {msg}
+                                        </div>
+                                    )}
+                                />
+                                <Field
+                                    as={TextField}
+                                    label="email"
+                                    name="email"
+                                    type="text"
+                                    required
+                                />
+                                <ErrorMessage
+                                    name="email"
+                                    render={(msg) => (
+                                        <div className={styles.font_error}>
+                                            {msg}
+                                        </div>
+                                    )}
+                                />
+                                <Field
+                                    as={TextField}
+                                    label="password"
+                                    name="password"
+                                    type="password"
+                                    required
+                                    autoComplete="current-password"
+                                />
+                                <ErrorMessage
+                                    name="password"
+                                    render={(msg) => (
+                                        <div className={styles.font_error}>
+                                            {msg}
+                                        </div>
+                                    )}
+                                />
+                                <Button
+                                    type="submit"
+                                    color="primary"
+                                    variant="contained"
+                                    disabled={registerIsLoading}
+                                    style={signBtnStyle}
+                                >
                                     <h2 className={styles.font_edit}>
-                                        Do you have an account?
+                                        {registerIsLoading
+                                            ? "Loading"
+                                            : "Sign Up"}
                                     </h2>
-                                    <Link to="/login">
-                                        <h2 className={styles.font_edit}>
-                                            Sign In
-                                        </h2>
-                                    </Link>
-                                </Form>
-                            </Paper>
-                        </Grid>
+                                </Button>
+                                <Link to="/">
+                                    <h2 className={styles.font_edit}>
+                                        Forgot password?
+                                    </h2>
+                                </Link>
+                                <h2 className={styles.font_edit}>
+                                    Do you have an account?
+                                </h2>
+                                <Link to="/login">
+                                    <h2 className={styles.font_edit}>
+                                        Sign In
+                                    </h2>
+                                </Link>
+                            </Form>
+                        </Paper>
                     </Formik>
                 </div>
             </div>

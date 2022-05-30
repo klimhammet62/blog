@@ -1,3 +1,4 @@
+import { RegisterPage } from "../components/Pages/Auth/RegisterPage";
 import { LoginPage } from "../components/Pages/Auth/LoginPage";
 import { Dashboard } from "../components/Pages/Dashboard/Dashboard";
 import { Home } from "../components/Pages/Home/Home";
@@ -6,26 +7,27 @@ import { Profile } from "../components/Pages/Profile/Profile";
 export const routes = [
     {
         path: "/",
-        exact: true,
-        component: Home,
+        element: Home,
         auth: false,
     },
     {
         path: "/login",
-        exact: false,
-        component: LoginPage,
+        element: LoginPage,
         auth: false,
     },
     {
-        path: "/dashboard",
-        exact: false,
-        component: Dashboard,
+        path: "/register",
+        element: RegisterPage,
+        auth: false,
+    },
+    {
+        path: "/dashboard:token",
+        element: Dashboard,
         auth: true,
     },
     {
-        path: "/profile",
-        exact: false,
-        component: Profile,
+        path: "/profile:token",
+        element: Profile,
         auth: true,
     },
 ];

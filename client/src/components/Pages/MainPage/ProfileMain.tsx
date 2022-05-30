@@ -1,4 +1,4 @@
-import React, { FC } from "react";
+import React from "react";
 import style from "./ProfileMain.module.scss";
 
 export const ProfileMain: React.FC = (): JSX.Element => {
@@ -14,17 +14,21 @@ export const ProfileMain: React.FC = (): JSX.Element => {
             />
             <h3 className={style.profile_about_title}>Обо мне</h3>
             <br />
-            <h2 className={style.profile_about_me}></h2>
-            2 года опыта. Проекты на фрилансе, работа в дизайн-студии. <br />
-            Знание английского - чтение технической документации. <br />
-            <br />
+            <h2 className={style.profile_about_me}>
+                2 года опыта. Проекты на фрилансе, работа в дизайн-студии.
+                <br />
+                Знание английского - чтение технической документации. <br />
+                <br />
+            </h2>
             <i>
                 <strong> О навыках во фронтенде на Github!</strong>
             </i>
-            <br />
-            Хочу поработать в большой команде с несколькими frontend
-            разработчиками.
-            <br />
+            <h2 className={style.profile_about_me}>
+                <br />
+                Хочу поработать в большой команде с несколькими frontend
+                разработчиками.
+                <br />
+            </h2>
             <br />
             <strong>Мои резюме:</strong>
             <div className="social_media_wrapper">
@@ -33,7 +37,7 @@ export const ProfileMain: React.FC = (): JSX.Element => {
                         src="assets/img/habr_logo.png"
                         width="60"
                         height="50"
-                        alt="Habr_Logo"
+                        alt="Habr"
                     />
                 </a>
                 <a href="https://hh.ru/resume/063971beff091387e20039ed1f6e5256523647">
@@ -41,7 +45,7 @@ export const ProfileMain: React.FC = (): JSX.Element => {
                         src="assets/img/hh_logo.png"
                         width="60"
                         height="45"
-                        alt="HH_Logo"
+                        alt="HeadHunter"
                     />
                 </a>
                 <a href="https://github.com/klimhammet62">
@@ -50,7 +54,7 @@ export const ProfileMain: React.FC = (): JSX.Element => {
                         src="assets/img/github_logo.png"
                         width="100"
                         height="70"
-                        alt="GitHub_Logo"
+                        alt="GitHub"
                     />
                 </a>
             </div>

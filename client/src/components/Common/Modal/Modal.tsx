@@ -180,7 +180,7 @@ export const Modal: React.FC<TModal> = ({ modal, setModal }): JSX.Element => {
                                     name="password"
                                     type="password"
                                     required
-                                    autoComplete="current-password"
+                                    autoComplete="password"
                                 />
                                 <ErrorMessage
                                     name="password"

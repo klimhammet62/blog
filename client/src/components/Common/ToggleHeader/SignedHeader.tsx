@@ -18,7 +18,6 @@ export const SignedHeader: React.FC = (): JSX.Element => {
     const [modal, setModal] = useState<boolean>(false);
     const navigate = useNavigate();
     const { filterSearch } = useActions();
-    const searchDebounce = debounce();
     const token = localStorage.getItem("token");
 
     const signOut = () => {
@@ -53,8 +52,7 @@ export const SignedHeader: React.FC = (): JSX.Element => {
                         className={styles.header_input}
                         maxLength={35}
                         placeholder="Поиск статьи по заголовку или тексту..."
-                        value={searchValue}
-                        onChange={(e) => filterSearch(e.target.value)}
+
                     />
                     <FontAwesomeIcon
                         className={styles.mark_button}

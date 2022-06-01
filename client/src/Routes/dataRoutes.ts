@@ -21,12 +21,12 @@ export const routes = [
         auth: false,
     },
     {
-        path: "/dashboard:token",
+        path: "/dashboard",
         element: Dashboard,
         auth: true,
     },
     {
-        path: "/profile:token",
+        path: "/profile",
         element: Profile,
         auth: true,
     },

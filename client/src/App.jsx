@@ -11,21 +11,32 @@ export const App = () => {
     const {
         data: isAuthData,
         isSuccess,
+        error: isAuthError
     } = $authApi.useIsAuthUserQuery();
 
     useEffect(() => {
-        console.log(isSuccess);
-        if (isSuccess, isAuthData) {
+        console.log(isAuthError);
+        if (!!isSuccess === false && !!isAuthData === false) {
             toast(
                 "👋Привет! Зарегай аккаунт, чтобы получить возможность выкладывать новости!"
             )
         }
-    }, []);
+        setTimeout(() => {
+            if (isAuthError) {
+                toast(
+                    `${isAuthError.data.errors}`
+                )
+            }
+        }, 2000);
+    }, [isAuthData]);
 
     return (
         <>
             <Routes>
                 {routes.map(route => {
+                    if (route.auth && !isAuthError) {
+                        return false
+                    }
                     return (
                         <Route
                             path={route.path}

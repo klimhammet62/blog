@@ -4,11 +4,13 @@ import { RootState } from "../store";
 export interface AuthState {
     fullName: string | null;
     token: string | null;
+    isModalShow: boolean;
 }
 
 const initialState: AuthState = {
     fullName: null,
     token: null,
+    isModalShow: false,
 };
 
 export const authSlice = createSlice({
@@ -22,14 +24,18 @@ export const authSlice = createSlice({
             state.fullName = action.payload.fullName;
             state.token = action.payload.token;
         },
+        setModal: (
+            state: AuthState,
+            action: PayloadAction<{ isModalShow: boolean }>
+        ) => {
+            state.isModalShow = action.payload.isModalShow;
+        },
         defaultState: (state: AuthState) => {
             state = initialState;
         },
     },
 });
 
-
-export const { setCredentials, defaultState } = authSlice.actions;
+export const { setCredentials, setModal, defaultState } = authSlice.actions;
 
 export default authSlice.reducer;
-export const selectCurrentUser = (state: RootState) => state.auth.user;

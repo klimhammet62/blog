@@ -12,7 +12,9 @@ const rootReducer = combineReducers({
 export const setupStore = () => {
     return configureStore({
         reducer: rootReducer,
-        middleware: (getDefaultMiddleware) => getDefaultMiddleware().concat($authApi.middleware),
+        middleware: (getDefaultMiddleware) =>
+            getDefaultMiddleware().concat($authApi.middleware),
+        devTools: true,
     });
 };
 

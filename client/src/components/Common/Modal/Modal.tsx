@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, Dispatch, SetStateAction } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faXmark } from "@fortawesome/free-solid-svg-icons";
 import { Formik, Form, Field, ErrorMessage, FormikHelpers } from "formik";
@@ -7,7 +7,7 @@ import { Button, TextField, Grid, Paper } from "@material-ui/core";
 import { Avatar } from "../Avatar/Avatar";
 import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { TModal } from "../../../models/modalType";
+import { TModal, TRegisterErrors } from "../../../models/modalType";
 import { $authApi } from "../../../service/authService";
 import {
     TRegister,
@@ -15,8 +15,9 @@ import {
     TRegisterSuccess,
 } from "../../../models/AuthTypes";
 import styles from "../../Pages/Auth/RegisterPage.module.scss";
+import { useActions } from "../../../hooks/useActions";
 
-export const Modal: React.FC<TModal> = ({ modal, setModal }): JSX.Element => {
+export const Modal: React.FC<TModal> = (): JSX.Element => {
     const paperStyle: React.CSSProperties = {
         padding: "3vh",
         margin: "0 auto",
@@ -38,6 +39,7 @@ export const Modal: React.FC<TModal> = ({ modal, setModal }): JSX.Element => {
     };
 
     const navigate = useNavigate();
+    const { setModal } = useActions();
 
     const [
         registerUser,
@@ -51,9 +53,9 @@ export const Modal: React.FC<TModal> = ({ modal, setModal }): JSX.Element => {
 
     const { data: isAuthData } = $authApi.useIsAuthUserQuery();
 
-    if (registerSuccess && registerData) {
+    if (registerSuccess && registerData && setModal) {
         localStorage.setItem("token", registerData.token);
-        setModal(!modal);
+        setModal(true);
         navigate("/");
         toast.success("🦄 You are registered!", {
             position: "bottom-right",
@@ -69,31 +71,29 @@ export const Modal: React.FC<TModal> = ({ modal, setModal }): JSX.Element => {
     if (isAuthData) {
         navigate("/");
     }
-    
-    switch (!!registerError === false && registerError) {
-        case Array.isArray(registerError?.data.errors):
-            toast.error(`🦄 ${registerError?.data.error}`, {
-                position: "top-right",
-                autoClose: 5000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-            });
-            break;
-        case !!registerError?.data.error:
-            toast.error(`🦄 ${registerError?.data.errors[0].message}`, {
-                position: "top-right",
-                autoClose: 5000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: true,
-                draggable: true,
-                progress: undefined,
-            });
-            break;
-    }
+
+    useEffect(() => {
+        if (
+            registerError &&
+            "status" in registerError &&
+            typeof registerError?.data === "object" &&
+            registerError?.data !== null
+        ) {
+            const data = registerError?.data as TRegisterErrors;
+            toast.error(
+                `🦄 ${data.errors ? data.errors[0].message : data.error}`,
+                {
+                    position: "top-right",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: true,
+                    pauseOnHover: true,
+                    draggable: true,
+                    progress: undefined,
+                }
+            );
+        }
+    }, [registerError]);
 
     const SignupSchema = Yup.object().shape({
         fullName: Yup.string().required("FullName is required"),
@@ -104,7 +104,11 @@ export const Modal: React.FC<TModal> = ({ modal, setModal }): JSX.Element => {
     });
 
     function onModalActive() {
-        setModal(!modal);
+        console.log(setModal);
+
+        if (setModal) {
+            setModal(!modal);
+        } else console.log("any");
     }
 
     const handleSubmit = async (

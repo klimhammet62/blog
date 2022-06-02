@@ -21,7 +21,7 @@ export const $postsApi = createApi({
         },
     }),
     endpoints: (build) => ({
-        registerUser: build.mutation<TRegisterSuccess, TRegister>({
+        createPost: build.mutation<any, any>({
             query: (values) => ({
                 url: "/register",
                 method: "POST",
@@ -39,7 +39,7 @@ export const $postsApi = createApi({
         }),
         getPosts: build.query<TSearchQueries, TSearchQueries>({
             query: (arg) => {
-                const { page, searchValue, userId } = arg;
+                const { page, searchValue, userId } = arg;         
                 return {
                     url: `posts?page=${page}&query=${searchValue}&userId=${userId}`,
                     params: { page, searchValue, userId },
@@ -49,7 +49,7 @@ export const $postsApi = createApi({
     }),
 });
 export const {
-    useRegisterUserMutation,
+    useCreatePostMutation,
     useUploadPictureMutation,
     useGetPostsQuery,
 } = $postsApi;

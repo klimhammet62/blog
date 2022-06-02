@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Avatar } from "../Avatar/Avatar";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -12,13 +12,16 @@ import styles from "./SignedHeader.module.scss";
 import { useAppSelector } from "../../../hooks/redux";
 import { useActions } from "../../../hooks/useActions";
 import debounce from "lodash.debounce";
+import { $postsApi } from "../../../service/postsService";
 
 export const SignedHeader: React.FC = (): JSX.Element => {
     const [toggleInput, setToggleInput] = useState<boolean>(true);
     const [modal, setModal] = useState<boolean>(false);
     const navigate = useNavigate();
+    const [searchValue, setSearchValue] = useState("");
     const { filterSearch } = useActions();
     const token = localStorage.getItem("token");
+
 
     const signOut = () => {
         localStorage.removeItem("token");
@@ -52,7 +55,7 @@ export const SignedHeader: React.FC = (): JSX.Element => {
                         className={styles.header_input}
                         maxLength={35}
                         placeholder="Поиск статьи по заголовку или тексту..."
-
+                        value={searchValue}  
                     />
                     <FontAwesomeIcon
                         className={styles.mark_button}

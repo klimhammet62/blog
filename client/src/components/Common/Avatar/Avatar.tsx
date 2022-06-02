@@ -1,10 +1,15 @@
 import style from "./Avatar.module.scss";
-import { Link } from "react-router-dom";
+import { TModal } from "../../../models/modalType";
 
-export const Avatar: React.FC = (): JSX.Element => {
+export const Avatar: React.FC<TModal> = ({ modal, setModal }): JSX.Element => {
+    function handleClick() {
+        if (modal && setModal) {
+            setModal(!modal);
+        }
+    }
     return (
-        <Link to="/" className={style.avatar}>
+        <div className={style.avatar} onClick={() => handleClick()}>
             BELARTY BLOG
-        </Link>
+        </div>
     );
 };

@@ -6,14 +6,13 @@ import {
     TRegisterSuccess,
     TLoginSuccess,
 } from "../models/AuthTypes";
-import { RootState } from "../redux/store";
 
 export const $authApi = createApi({
     reducerPath: "authApi",
     baseQuery: fetchBaseQuery({
         baseUrl: `${process.env.REACT_APP_CONTENT_API_URL}/auth`,
-        prepareHeaders: (headers, { getState }) => {
-            const token = (getState() as RootState).auth.token;
+        prepareHeaders: (headers) => {
+            const token = localStorage.getItem("token");
             if (token) {
                 headers.set("Authorization", `Bearer ${token}`);
             }

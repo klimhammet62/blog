@@ -16,7 +16,7 @@ export const App = () => {
 
     useEffect(() => {
         console.log(isAuthError);
-        if (!!isSuccess === false && !!isAuthData === false) {
+        if (!isSuccess && !isAuthData) {
             toast(
                 "👋Привет! Зарегай аккаунт, чтобы получить возможность выкладывать новости!"
             )
@@ -24,11 +24,11 @@ export const App = () => {
         setTimeout(() => {
             if (isAuthError) {
                 toast(
-                    `${isAuthError.data.errors}`
+                    `${isAuthError}`
                 )
             }
         }, 2000);
-    }, [isAuthData]);
+    }, []);
 
     return (
         <>
